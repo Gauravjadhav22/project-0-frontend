@@ -1,17 +1,37 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <Header />
+  <router-view v-if="!isLoadig" />
+
+  <div class="page_loader" v-else>
+    <Loader />
+  </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import Header from "./Components/Header/index.vue";
+import Loader from "@/Utils/loader";
+import { mapGetters } from "vuex";
+import store from "./Store";
 
 export default {
-  name: 'App',
+  name: "App",
+  // data(){
+  //   return {
+  //   }
+  // },
+
   components: {
-    HelloWorld
-  }
-}
+    Header,
+    Loader,
+  },
+  computed: {
+    ...mapGetters({
+      toastMsg: "notify/getToastMsg",
+      isLoadig: "notify/isLoading",
+    }),
+  },
+
+};
 </script>
 
 <style>
