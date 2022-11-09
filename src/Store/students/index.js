@@ -1,8 +1,6 @@
-import { mapGetters, mapState } from "vuex";
-import store from "..";
+import { mapGetters, } from "vuex";
 import { privateRequest } from "../../Config";
-import router from '../../routes';
-import Vue from 'vue'
+
 
 
 
@@ -32,45 +30,29 @@ const studentsModule = {
 
     mutations: {
         setStudents(state, payload) {
-            state.students = { ...state.students, ...payload }
+            state.students = [...state.students, ...payload]
         },
         setNewStudent(state, payload) {
-            state.students = { ...state.students, payload }
+            state.students = [...state.students, payload]
         },
         setUpdatedStudents(state, payload) {
+            const students = [...state.students]
 
+            const index = students.findIndex((item) => item.id === payload.id)
+            students[index] = payload;
 
-            let index = 0
-            while (state.students[index]) {
-                // console.log(state.students[index].id === payload.id);
-                if (state.students[index].id === payload.id) {
-
-                    state.students[index] = payload;
-                    state.students[index]['class name'] = payload.className;
-                    return;
-                }
-                index++;
-
-            }
-
-
-
+            state.students = [...students];
         },
         setDeletedStudents(state, payload) {
-            let index = 0
-            let arr = []
-            while (state.students[index]) {
-                // console.log(state.students[index].id === payload.id);
-                if (state.students[index].id != payload.id) {
-
-                    arr.push(state.students[index])
-
-                }
-                index++;
 
 
-            }
-            state.students = arr;
+
+            const students = [...state.students]
+            const index = students.findIndex((item) => item.id === payload.id)
+            students.splice(index, 1);
+            state.students = students;
+
+
         }
         ,
         setUser(state, payload) {
@@ -78,22 +60,11 @@ const studentsModule = {
         },
         setSearchedStudents(state, payload) {
 
-            let index = 0
-            let arr = []
-            while (state.students[index]) {
-                // console.log(state.students[index].name === payload.toLowerCase().trim());
-                if (state.students[index].name === payload.toLowerCase().trim()) {
-                    console.log("fkldsfjsldjfsdjfsffffffff");
-                    arr.push(state.students[index])
-
-                }
-                index++;
-
-
-            }
-            console.log(state.students);
-            state.students = arr;
-
+            console.log(payload);
+            const students = [...state.students];
+            const index = students.findIndex((item) => item.name === payload)
+            console.log( state.students[index]);
+        
 
         },
         clearUser(state) {
@@ -114,10 +85,10 @@ const studentsModule = {
 
             })
         },
-        async addStudent({ commit, getters }, payload) {
+        async addStudent({ commit }, payload) {
 
 
-            await privateRequest.post('/addstudent', { 'address': payload.address, 'name': payload.name, 'email': payload.email, 'class name': payload.className, 'contact': '3437849238', 'dob': payload.dob }).then((response) => {
+            await privateRequest.post('/addstudent', { ...payload, 'class name': payload.className }).then((response) => {
 
                 commit('setNewStudent', response.data,);
                 // router.push('/');
@@ -125,13 +96,10 @@ const studentsModule = {
                 console.log(error);
 
 
-            }).finally(() => {
-
-                // commit('notify/setLoading', false, { root: true })
             })
         },
         async updateStudent({ commit, getters }, payload) {
-            await privateRequest.patch(`/updatestudent/${payload.id}`, { 'address': payload.address, 'name': payload.name, 'email': payload.email, 'class name': payload.className, 'contact': '3437849238', 'dob': payload.dob }).then((response) => {
+            await privateRequest.patch(`/updatestudent/${payload.id}`, { ...payload, 'class name': payload.className }).then((response) => {
                 commit('setUpdatedStudents', payload);
                 // router.push('/');
             }).catch((error) => {
@@ -158,7 +126,7 @@ const studentsModule = {
             await privateRequest.delete(`/deletestudent/${payload.id}`).then((response) => {
 
                 commit('setDeletedStudents', payload);
-                // router.push('/');
+
             }).catch((error) => {
                 console.log(error);
             })

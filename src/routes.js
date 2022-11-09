@@ -2,9 +2,8 @@ import Auth from './Components/Auth'
 import NotFound from './Components/404.vue'
 import Dashboard from './Components/Dashboard/'
 import Student from './Components/Dashboard/Student'
-import { privateRequest } from './Config'
 import store from './Store'
-import { createRouter, createWebHashHistory, createWebHistory, START_LOCATION } from 'vue-router';
+import { createRouter, createWebHashHistory,} from 'vue-router';
 
 const routes = createRouter({
     history: createWebHashHistory(),

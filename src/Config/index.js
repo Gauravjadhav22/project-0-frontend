@@ -11,7 +11,7 @@ export const privateRequest = axios.create({
     baseURL: BASE_URL,
     headers: {
         'Content-Type': 'application/json',
-        // 'Authorization': `Bearer ${token}`
+        'Authorization': `Bearer ${token}`
 
     },
     withCredentials: true

@@ -33,7 +33,7 @@
 
   <div
     v-show="!addStudent"
-    class="flex justify-center items-center flex-wrap my-10 mx-2 "
+    class="flex justify-center items-center flex-wrap my-10 mx-2"
   >
     <Student
       v-for="student in students"
@@ -71,13 +71,15 @@ export default {
   data() {
     return {
       addStudent: false,
+      fetch: true,
     };
   },
 
-  mounted() {
+  beforeMount() {
     this.$store.watch(async () => {
-      if (this.students.length <= 0) {
+      if (this.students.length <= 0 && this.fetch) {
         this.$store.dispatch("students/getAllStudents");
+        this.fetch = false;
       }
     });
   },

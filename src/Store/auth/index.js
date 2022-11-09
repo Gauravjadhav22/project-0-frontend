@@ -7,8 +7,6 @@ const DEFAULT_USER = {
     id: null,
     name: null,
 
-
-
 }
 
 const authModule = {
@@ -53,13 +51,13 @@ const authModule = {
         }
     },
     actions: {
-        async signIn({ commit, getters }, payload) {
+        async signIn({ commit, }, payload) {
             commit('notify/setLoading', true, { root: true })
-            await axios.post('/login', { email: payload.email, password: payload.password }).then((response) => {
+            await axios.post('/login', payload).then((response) => {
                 console.log(response.data.token);
 
                 commit('setUser', response.data,);
-                // router.go(0)
+                router.go(0)
 
             }).catch((error) => {
                 console.log(error);
@@ -74,23 +72,20 @@ const authModule = {
             try {
                 console.log(payload);
 
+                await axios.post('/register', payload)
 
-                const response = await axios.post('/register', { name: payload.name, email: payload.email, password: payload.password })
-
-                console.log(response, "res aa gya");
 
 
                 alert('user created plz sign in')
 
                 router.replace('/auth');
             } catch (error) {
-                console.log(error, "error aa gya");
             } finally {
                 commit('notify/setLoading', false, { root: true })
             }
         },
 
-        async getUser({ commit, getters }, payload) {
+        async getUser({ commit, }) {
             console.log("getting user");
             await privateRequest.get('/user',).then((response) => {
                 console.log(response.data);
@@ -104,7 +99,7 @@ const authModule = {
 
             })
         },
-        async signOut({ commit, getters }, payload) {
+        async signOut({ commit, }) {
 
             commit('notify/setLoading', true, { root: true })
             await axios.get('/logout',).then((response) => {
